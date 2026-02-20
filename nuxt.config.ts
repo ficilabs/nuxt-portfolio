@@ -3,7 +3,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/google-fonts'],
+  modules: [
+    '@nuxtjs/google-fonts',
+    '@storyblok/nuxt',
+  ],
+
+  storyblok: {
+    accessToken: process.env.STORYBLOK_TOKEN,
+    apiOptions: {
+      region: 'eu',
+    },
+  },
   css: [
     '~/assets/styles/styles.scss',
   ],

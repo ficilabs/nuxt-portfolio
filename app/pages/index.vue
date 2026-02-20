@@ -1,3 +1,11 @@
+<script setup>
+  const { story } = await useAsyncStoryblok('home', {
+    api: {
+      version: 'draft', // or 'published'
+    },
+  });
+</script>
+
 <template>
-    <h1>welcolome to my page</h1>
+  <StoryblokComponent v-if="story" :blok="story.content" />
 </template>
