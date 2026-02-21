@@ -1,4 +1,6 @@
 <template>
+  <TheHead />
+  <TheHeader />
   <main class="main">
     <SvgPoints class="main__svg main__points" />
     <div class="main">
