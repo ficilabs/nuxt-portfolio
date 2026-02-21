@@ -1,4 +1,4 @@
-import type { StoryblokComponentType, ISbStoryData } from '@storyblok/js';
+import type { StoryblokComponentType } from '@storyblok/js';
 
 export interface MyButton extends StoryblokComponentType<'MyButton'> {
   text: string
@@ -13,4 +13,8 @@ export interface MyButton extends StoryblokComponentType<'MyButton'> {
 
 export interface MyButtonList extends StoryblokComponentType<'MyButtonList'> {
   buttons: MyButton[];
+}
+
+export interface MyRichText extends StoryblokComponentType<'MyRichText'> {
+  text: any
 }
