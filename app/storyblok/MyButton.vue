@@ -1,16 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-
-type MyButton = {
-  text: string
-  isRound: boolean
-  isLink: boolean
-  link?: {
-    linktype?: string
-    cached_url?: string
-    url?: string
-  }
-}
+import type { MyButton } from '~/types/components'
 
 const props = defineProps<{
   blok: MyButton

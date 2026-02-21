@@ -1,25 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import MyButton from './MyButton.vue'
-
-type MyButtonBlok = {
-  _uid: string
-  text: string
-  isRound: boolean
-  isLink: boolean
-  link?: {
-    linktype?: string
-    cached_url?: string
-    url?: string
-  }
-}
-
-type MyButtonListBlok = {
-  buttons: MyButtonBlok[]
-}
+import type { MyButtonList } from '~/types/components'
 
 defineProps<{
-  blok: MyButtonListBlok
+  blok: MyButtonList
 }>()
 
 const el = ref<HTMLElement | null>(null)
