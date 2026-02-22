@@ -20,11 +20,18 @@ const text = computed(() => {
   font-size: 72px;
   line-height: 1.1;
   font-weight: 700;
+  margin-bottom: 24px; 
 }
 
 /* p = 18px */
 .rich-text :deep(p) {
   font-size: 18px;
   line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* jika ada p sebelum h2 */
+.rich-text :deep(p + h2) {
+  margin-top: 48px;
 }
 </style>
