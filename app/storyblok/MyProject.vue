@@ -40,8 +40,7 @@ const props = defineProps<{
           </span>
         </div>
         <!-- Image -->
-        <pre>{{ blok.media }}</pre>
-        <MyImage :blok="blok.media" />
+        <MyImage :blok="blok.media?.[0]" />
 
       </div>
     </div>

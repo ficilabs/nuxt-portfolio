@@ -41,7 +41,7 @@ export interface MyProject extends StoryblokComponentType<'MyProject'> {
     url: string
     linktype: 'url'
   }
-  media: MyImage
+  media: MyImage[]
 }
 
 export interface FilterButton extends MyButton {
