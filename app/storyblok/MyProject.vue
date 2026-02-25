@@ -40,11 +40,8 @@ const props = defineProps<{
           </span>
         </div>
         <!-- Image -->
-        <MyImage 
-          v-if="blok.media" 
-          :blok="blok.media"
-          class="window__image" 
-        />
+        <pre>{{ blok.media }}</pre>
+        <MyImage :blok="blok.media" />
 
       </div>
     </div>

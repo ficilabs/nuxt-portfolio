@@ -27,11 +27,7 @@ export interface MyHero extends StoryblokComponentType<'MyHero'> {
 export interface MyImage extends StoryblokComponentType<'MyImage'> {
   width: number
   height: number
-  image: {
-    filename: string
-    alt: string
-  }
-  alt: string
+  image: string
 }
 
 export interface MyProject extends StoryblokComponentType<'MyProject'> {
