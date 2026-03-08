@@ -64,3 +64,9 @@ export interface MyProfile extends StoryblokComponentType<'MyProfile'> {
   linkedin: string
   instagram: string
 }
+
+export interface MyParagraph extends StoryblokComponentType<'MyParagraph'> {
+  isReversed?: boolean;
+  showScroll?: boolean;
+  figure?: MyImage[];
+}

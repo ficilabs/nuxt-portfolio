@@ -1,51 +1,105 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import type { MyProfile } from '~/types/components';
-import { elevateAnimationObserver } from '~/utils/gsap-animations';
+import MyImage from '~/storyblok/MyImage.vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import type { MyProfile } from '~/types/components'
+import { elevateAnimationObserver } from '~/utils/gsap-animations'
 
-const props = defineProps<{ blok: MyProfile }>();
+const props = defineProps<{ blok: MyProfile }>()
 
-const profileImgObserver = ref<IntersectionObserver>();
-const linksObserver = ref<IntersectionObserver>();
+/*
+|--------------------------------------------------------------------------
+| Refs
+|--------------------------------------------------------------------------
+*/
 
-const profileImgRef = ref<{ el: Element }>();
-const linksRef = ref<Element>();
+const profileImgRef = ref<{ el: Element }>()
+const linksRef = ref<Element>()
 
-const links = computed(() => [
-  { url: props.blok.linkedin, id: 'linkedin' },
-  { url: props.blok.github, id: 'github' },
-  { url: props.blok.instagram, id: 'instagram' },
-].filter(link => link.url))
+const profileImgObserver = ref<IntersectionObserver>()
+const linksObserver = ref<IntersectionObserver>()
+
+/*
+|--------------------------------------------------------------------------
+| Storyblok Image
+|--------------------------------------------------------------------------
+*/
+
+const profileImage = computed(() => props.blok.profileImg?.[0])
+
+/*
+|--------------------------------------------------------------------------
+| Social Links
+|--------------------------------------------------------------------------
+*/
+function normalizeLink(id: string, link?: any) {
+  return {
+    id,
+    url: link?.cached_url || link?.url || null
+  }
+}
+
+const links = computed(() =>
+  [
+    normalizeLink('linkedin', props.blok.linkedin),
+    normalizeLink('github', props.blok.github),
+    normalizeLink('instagram', props.blok.instagram)
+  ].filter(link => link.url)
+)
+
+function getUrl(link: any) {
+  return link.cached_url || link.url
+}
+
+/*
+|--------------------------------------------------------------------------
+| Animations
+|--------------------------------------------------------------------------
+*/
 
 onMounted(() => {
-  if (profileImgRef.value) {
-    profileImgObserver.value = elevateAnimationObserver(profileImgRef.value.el);
+  if (profileImgRef.value?.el) {
+    profileImgObserver.value = elevateAnimationObserver(profileImgRef.value.el)
   }
+
   if (linksRef.value) {
-    linksObserver.value = elevateAnimationObserver(linksRef.value);
+    linksObserver.value = elevateAnimationObserver(linksRef.value)
   }
 })
 
 onBeforeUnmount(() => {
-  profileImgObserver.value?.disconnect();
-  linksObserver.value?.disconnect();
+  profileImgObserver.value?.disconnect()
+  linksObserver.value?.disconnect()
 })
 
-function iconPath(icon: string): string {
-  return '/sprite.svg#' + icon;
+/*
+|--------------------------------------------------------------------------
+| Icons
+|--------------------------------------------------------------------------
+*/
+
+function iconPath(icon: string) {
+  return `/sprite.svg#${icon}`
 }
 </script>
 
 <template>
   <div v-editable="blok" class="profile">
+
+    <!-- Profile Image -->
     <div class="profile__wrapper profile__wrapper--round">
-      <MyImage :blok="blok.profileImg?.[0]" />
+      <MyImage
+        v-if="profileImage"
+        ref="profileImgRef"
+        class="profile__img"
+        :blok="profileImage"
+        border-radius="50%"
+      />
     </div>
+
+    <!-- Social Links -->
     <div class="profile__wrapper">
-      <ul
-        ref="linksRef"
-        class="profile__links"
-      >
+      <ul ref="linksRef" class="profile__links">
+
         <li
           v-for="link in links"
           :key="link.id"
@@ -53,9 +107,9 @@ function iconPath(icon: string): string {
         >
           <a
             class="profile__a"
-            :href="link.url"
+            :href="getUrl(link)"
             target="_blank"
-            rel="me noopener"
+            rel="noopener me"
             :aria-label="`Go to ${link.id}`"
           >
             <svg class="profile__svg">
@@ -63,8 +117,10 @@ function iconPath(icon: string): string {
             </svg>
           </a>
         </li>
+
       </ul>
     </div>
+
   </div>
 </template>
 
