@@ -57,3 +57,10 @@ export interface MyProjectFilter {
 export interface MyProjectList extends StoryblokComponentType<'MyProjectList'> {
   body: MyProject[]
 }
+
+export interface MyProfile extends StoryblokComponentType<'MyProfile'> {
+  profileImg: MyImage[]
+  github: string
+  linkedin: string
+  instagram: string
+}

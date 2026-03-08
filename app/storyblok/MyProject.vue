@@ -23,6 +23,9 @@ const props = defineProps<{
       </p>
 
       <!-- Links -->
+      <div class="project__links">
+        
+      </div>
 
     </div>
 
