@@ -33,6 +33,7 @@ export interface MyImage extends StoryblokComponentType<'MyImage'> {
 export interface MyProject extends StoryblokComponentType<'MyProject'> {
   title: string
   description: string
+  tags: FilterButton['tag'][]
   demo: {
     url: string
     linktype: 'url'
@@ -56,11 +57,8 @@ export interface MyProjectFilter {
 
 export interface MyProjectList extends StoryblokComponentType<'MyProjectList'> {
   _uid: string;
-  filter: [MyProjectFilter]
-  body: {
-    content: MyProject, tag_list?: string[];
-    order?: number;
-  }[];
+  filter: MyProjectFilter[]
+  body: MyProject[]
 }
 
 export interface MyProfile extends StoryblokComponentType<'MyProfile'> {

@@ -1,55 +1,21 @@
-<script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
-import { gsap } from 'gsap';
-import type { FilterButton, MyProjectList } from '~/types/components';
+<script setup lang="ts">
+import type { MyProjectList } from '~/types/components'
 
-const props = defineProps<{ blok: MyProjectList }>();
+const props = defineProps<{
+  blok: MyProjectList
+}>()
 
-const projectListRef = ref<Element>();
-const selectedFilter = ref<FilterButton['tag']>('show-all');
-
-onMounted(() => {
-  if (window.innerWidth < 1024) {
-    animateFading(1);
-  } else {
-    animateFading(2);
-  }
-})
+const activeFilter = ref<string>('show-all')
 
 const filteredProjects = computed(() => {
-  return props.blok.body
-    .filter((project) => 
-      project?.content &&  // Ensure content exists
-      (selectedFilter.value === 'show-all' ||
-       project.tag_list?.includes(String(selectedFilter.value)) || false)
-    )
-    .map((p) => p.content)
-    .filter((project) => project != null)  // Extra safety
+  if (activeFilter.value === 'show-all') return props.blok.body
+  return props.blok.body?.filter(project =>
+    project.tags?.includes(activeFilter.value as any)
+  ) ?? []
 })
 
-function animateFading(delay: number) {
-  if (projectListRef.value) {
-    gsap.set(projectListRef.value, {
-      autoAlpha: 0,
-    })
-    gsap.to(projectListRef.value, {
-      autoAlpha: 1,
-      duration: 1,
-      delay,
-    })
-  }
-}
-
-function setOverflow(value: string) {
-  document.documentElement.style.overflow = value;
-}
-
-function refreshScroll() {
-  setOverflow('auto');
-}
-
-function changeFilter(tag: FilterButton['tag']) {
-  selectedFilter.value = tag;
+function onFilterSelected(tag: string) {
+  activeFilter.value = tag
 }
 </script>
 
@@ -58,39 +24,29 @@ function changeFilter(tag: FilterButton['tag']) {
     v-editable="blok"
     class="projects page__component"
   >
+    <!-- Filter -->
     <MyProjectFilter
+      v-if="blok.filter?.[0]"
       :blok="blok.filter[0]"
-      @filterSelected="changeFilter"
+      @filterSelected="onFilterSelected"
     />
-    <div
-      ref="projectListRef"
-      class="projects__list-wrapper"
+
+    <ul
+      v-if="filteredProjects.length"
+      class="projects__list"
     >
-      <TransitionGroup
-        tag="ul"
-        name="list-complete"
-        class="projects__list"
-        @before-enter="setOverflow('hidden')"
-        @before-leave="setOverflow('hidden')"
-        @after-enter="refreshScroll"
-        @after-leave="refreshScroll"
+      <li
+        v-for="project in filteredProjects"
+        :key="project._uid"
+        class="projects__project"
       >
-        <li
-          v-for="project in filteredProjects"
-          :key="project._uid"
-          class="projects__project list-complete-item"
-        >
-          <MyProject
-            :key="`${project._uid}-component`"
-            :ref="project._uid"
-            :blok="project"
-          />
-        </li>
-      </TransitionGroup>
-    </div>
+        <MyProject :blok="project" />
+      </li>
+    </ul>
+
+    <p v-else class="projects__empty">No projects found.</p>
   </section>
 </template>
-
 
 <style lang="scss" scoped>
 .projects {
