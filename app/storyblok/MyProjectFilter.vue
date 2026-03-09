@@ -1,41 +1,53 @@
 <script lang="ts" setup>
+
+import { onMounted, ref } from 'vue';
+import MyButton from './MyButton.vue';
 import type { FilterButton, MyProjectFilter } from '~/types/components';
+import { elasticAnimation } from '~/utils/gsap-animations';
 
 defineProps<{ blok: MyProjectFilter }>();
 
-const emit = defineEmits<{ filterSelected: [value: FilterButton['tag']] }>();
+const emit = defineEmits<{ filterSelected: [value: FilterButton['tag']] }>()
 
 const filterSelected = ref<FilterButton['tag']>('show-all');
-const sliderScrollRef = ref<HTMLElement | null>(null);
+const sliderScrollRef = ref<Element>();
 const isPrevVisible = ref(false);
 const isNextVisible = ref(false);
-const offset = 5;
+const offset = ref(5);
 
 onMounted(() => {
+  setShadowVisibility({
+    target: sliderScrollRef.value,
+  } as unknown as Event);
+  sliderScrollRef.value?.addEventListener('scroll', setShadowVisibility);
+  animateButtons();
+})
+
+function animateButtons() {
   if (sliderScrollRef.value) {
-    updateShadowVisibility(sliderScrollRef.value);
-    sliderScrollRef.value.addEventListener('scroll', onScroll);
+    const projectFilterButtons = (
+      sliderScrollRef.value
+    ).querySelectorAll('[data-animation="true"]');
+    if (window.innerWidth < 1024) {
+      elasticAnimation(projectFilterButtons, -7, -7, 1, 0.25, 0);
+    } else {
+      elasticAnimation(projectFilterButtons, -7, -7, 1, 0.45, 0);
+    }
   }
-});
-
-onUnmounted(() => {
-  sliderScrollRef.value?.removeEventListener('scroll', onScroll);
-});
-
-function onScroll(e: Event): void {
-  updateShadowVisibility(e.target as HTMLElement);
 }
 
-function updateShadowVisibility(el: HTMLElement): void {
-  const { scrollWidth, clientWidth, scrollLeft } = el;
-
-  if (scrollWidth - clientWidth <= 1) {
+function setShadowVisibility(e: Event): void {
+  const el = e.target as Element;
+  if (el.scrollWidth - el.clientWidth <= 1) {
     isPrevVisible.value = false;
     isNextVisible.value = false;
-  } else if (scrollLeft < offset) {
+  } else if (el.scrollLeft < offset.value) {
     isPrevVisible.value = false;
     isNextVisible.value = true;
-  } else if (scrollWidth < scrollLeft + clientWidth + offset) {
+  } else if (
+    el.scrollWidth <
+    el.scrollLeft + el.clientWidth + offset.value
+  ) {
     isPrevVisible.value = true;
     isNextVisible.value = false;
   } else {
@@ -48,17 +60,23 @@ function onFilterSelected(tag: FilterButton['tag']): void {
   filterSelected.value = tag;
   emit('filterSelected', tag);
 }
-</script>
 
+</script>
 <template>
-  <div v-editable="blok" class="filter">
+  <div
+    v-editable="blok"
+    class="filter"
+  >
     <div class="filter__container">
       <div
         v-show="isPrevVisible"
         class="filter__scroll-shadow filter__scroll-shadow--prev"
         data-test="prev"
       ></div>
-      <ul ref="sliderScrollRef" class="filter__list">
+      <ul
+        ref="sliderScrollRef"
+        class="filter__list"
+      >
         <li
           v-for="button in blok.buttonList"
           :key="button._uid"
