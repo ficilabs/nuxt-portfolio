@@ -43,7 +43,7 @@ const props = defineProps<{
           </span>
         </div>
         <!-- Image -->
-        <MyImage :blok="blok.media?.[0]" />
+        <MyImage v-if="blok.media?.[0]" :blok="blok.media[0]" />
 
       </div>
     </div>

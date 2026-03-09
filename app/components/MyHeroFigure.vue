@@ -108,7 +108,7 @@ defineExpose({
         width="510"
         height="677"
         class="hero-figure__img hero-figure__img--avatar"
-        src="https://a.storyblok.com/f/95455/510x677/7d7ab33433/homie-05.png/m/filters:format(webp)"
+        src="https://a.storyblok.com/f/290600019888888/4096x4096/95e036efa4/hero.png"
       />
       <NuxtImg
         alt=""

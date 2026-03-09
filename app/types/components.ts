@@ -55,6 +55,8 @@ export interface MyProjectFilter {
 }
 
 export interface MyProjectList extends StoryblokComponentType<'MyProjectList'> {
+  _uid: string;
+  filter: MyProjectFilter[]
   body: MyProject[]
 }
 
