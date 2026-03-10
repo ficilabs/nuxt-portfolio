@@ -1,29 +1,32 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { getPath } from '~/utils/get-path'
 import type { MyButton } from '~/types/components'
 
-const props = defineProps<{
-  blok: MyButton
-}>()
+const emit = defineEmits(['buttonClicked'])
 
-const isSelected = ref(false)
+const props = withDefaults(
+  defineProps<{
+    blok: MyButton
+    isSelected?: boolean
+  }>(),
+  {
+    isSelected: false
+  }
+)
 
-const onClick = () => {
-  isSelected.value = !isSelected.value
+function onClick(event: Event): void {
+  emit('buttonClicked', event)
 }
 
-const resolvedPath = computed(() => {
-  if (!props.blok?.link) return '/'
+const url = computed(() => {
+  const cached = props.blok.link?.cached_url || ''
+  return cached.split('/').filter(Boolean)
+})
 
-  if (props.blok.link.linktype === 'story') {
-    return `/${props.blok.link.cached_url || ''}`
-  }
-
-  if (props.blok.link.linktype === 'url') {
-    return props.blok.link.url || '#'
-  }
-
-  return '/'
+const toPath = computed(() => {
+  const segment = url.value.at(url.value.length === 1 ? 0 : 1)
+  return getPath(segment ?? '/')
 })
 </script>
 
@@ -33,24 +36,30 @@ const resolvedPath = computed(() => {
     v-editable="blok"
     :class="['button-container', { 'button-container--round': blok.isRound }]"
   >
+    <!-- Normal Button -->
     <button
       v-if="!blok.isLink"
       :class="[
         'button',
         { 'button--selected': isSelected },
-        { 'button--round': blok.isRound },
+        { 'button--round': blok.isRound }
       ]"
       type="button"
+      :data-animation="!isSelected"
       :aria-pressed="isSelected"
       @click="onClick"
     >
       {{ blok.text }}
     </button>
 
+    <!-- Link Button -->
     <NuxtLink
-      v-else
+      v-else-if="blok.link?.linktype === 'story'"
       class="button"
-      :to="resolvedPath"
+      :class="[
+        { 'button--round': blok.isRound }
+      ]"
+      :to="toPath"
     >
       {{ blok.text }}
     </NuxtLink>

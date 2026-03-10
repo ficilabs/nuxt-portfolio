@@ -146,7 +146,22 @@ function textAnimation(elem: Element, text: string): gsap.core.Tween {
         {{ blok.description }}
       </p>
       <div class="project__links">
-        
+        <MyLink
+          v-if="blok.demo.url"
+          class="project__link"
+          :link="blok.demo.url"
+          @mouseenter.native="onLinkHover('Play with it')"
+        >
+          Live
+        </MyLink>
+        <MyLink
+          v-if="blok.code.url"
+          class="project__link"
+          :link="blok.code.url"
+          @mouseenter.native="onLinkHover('Check code')"
+        >
+          Code
+        </MyLink>
       </div>
     </div>
     <div class="project__media">

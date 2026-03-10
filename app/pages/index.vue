@@ -1,5 +1,5 @@
 <script setup>
-  const { story } = await useAsyncStoryblok('project', {
+  const { story } = await useAsyncStoryblok('home', {
     api: {
       version: 'draft', // or 'published'
     },

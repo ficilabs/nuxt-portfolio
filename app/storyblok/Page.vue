@@ -1,35 +1,55 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
-import type { SbBlokData } from '@storyblok/vue'
+import type { SbBlokData } from '@storyblok/js';
+import { onMounted, ref } from 'vue';
+import { gsap } from 'gsap';
+import type { MyPage } from '~/types/components';
 
-type PageBlok = {
-  title?: string
-  body?: SbBlokData[]
-}
+defineProps<{ blok: MyPage }>();
 
-const props = defineProps<{
-  blok: PageBlok
-}>()
+const pageRef = ref<Element>();
+const pageTitleRef = ref<Element>();
+const pageGroupRef = ref<Element>();
 
-const pageRef = ref<HTMLElement | null>(null)
-const pageTitleRef = ref<HTMLElement | null>(null)
-const pageGroupRef = ref<HTMLElement | null>(null)
-
-onMounted(async () => {
-  await nextTick()
-
-  if (pageRef.value) {
-    pageRef.value.style.visibility = 'visible'
-  }
-
-  if (pageTitleRef.value) {
-    pageTitleRef.value.style.visibility = 'visible'
-  }
-
-  if (pageGroupRef.value) {
-    pageGroupRef.value.style.visibility = 'visible'
+onMounted(() => {
+  if (pageRef.value && pageGroupRef.value) {
+    animatePage(pageRef.value, pageGroupRef.value, pageTitleRef.value);
   }
 })
+
+function animatePage(page: Element, pageGroup: Element, pageTitle?: Element) {
+  const tl = gsap.timeline({
+    defaults: { ease: 'ease.in', duration: 0.5 },
+  });
+  if (window.innerWidth > 1024) {
+    if (pageTitle) {
+      tl.set(pageTitle, {
+        autoAlpha: 0,
+        yPercent: 50,
+      });
+    }
+    tl.from(page, {
+      autoAlpha: 0,
+    });
+    if (pageTitle) {
+      tl.to(pageTitle, {
+        autoAlpha: 1,
+        yPercent: 0,
+      });
+    }
+    if (pageGroup) {
+      tl.from(pageGroup, {
+        autoAlpha: 0,
+      });
+    }
+  } else {
+    tl.from(page, {
+      autoAlpha: 0,
+    });
+    tl.from(pageGroup, {
+      autoAlpha: 0,
+    });
+  }
+}
 </script>
 
 <template>
@@ -42,10 +62,8 @@ onMounted(async () => {
       v-if="blok.title"
       ref="pageTitleRef"
       class="page__title"
-    >
-      {{ blok.title }}<span class="dot">.</span>
+    >{{ blok.title }}<span class="dot">.</span>
     </h1>
-
     <div
       ref="pageGroupRef"
       class="page__group"
@@ -58,6 +76,7 @@ onMounted(async () => {
     </div>
   </section>
 </template>
+
 
 <style lang="scss" scoped>
 @use '~/assets/styles/variables' as *;
@@ -100,5 +119,6 @@ onMounted(async () => {
   &__component {
     margin-top: 25px;
   }
+
 }
 </style>
