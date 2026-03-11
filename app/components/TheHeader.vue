@@ -1,8 +1,85 @@
 <script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue';
+import { gsap } from 'gsap';
+import { getPath } from '~/utils/get-path';
+
+const navRef = ref<Element>();
+
+const links = [
+  { text: 'Home', slug: 'home' },
+  { text: 'Projects', slug: 'projects' },
+  { text: 'About', slug: 'about' },
+]
+
+const storyLinks = computed(() => {
+  return links.map(link => ({
+    text: link.text,
+    icon: `/sprite.svg#${link.slug}`,
+    path: getPath(link.slug)
+  }))
+});
+
+onMounted(() => {
+  animateHeader();
+})
+
+function animateHeader(): void {
+  const nav = navRef.value;
+  if (nav) {
+    const linkIcons = nav.querySelectorAll('.link__icon');
+    if (linkIcons.length > 0) {
+      if (window.innerWidth < 1024) {
+        animateNav(nav, 100, 0.5, 2);
+        animateLinkIcons(linkIcons, 50, 1, 2.5);
+      } else {
+        animateNav(nav, 0, 0, 0);
+        animateLinkIcons(linkIcons, -50, 1, 0);
+      }
+    }
+  }
+
+  function animateNav(nav: Element, yPercent: number, duration: number, delay: number): void {
+    gsap.set(nav, { autoAlpha: 0, yPercent });
+    gsap.to(nav, { autoAlpha: 1, yPercent: 0, ease: 'ease.in', duration, delay });
+  }
+
+  function animateLinkIcons(linkIcons: NodeListOf<Element>, yPercent: number, duration: number, delay: number): void {
+    gsap.set(linkIcons, { autoAlpha: 0, yPercent });
+    gsap.to(linkIcons, {
+      autoAlpha: 1,
+      yPercent: 0,
+      ease: 'elastic',
+      delay,
+      duration,
+      stagger: { amount: 0.5 },
+    });
+  }
+}
 </script>
 
 <template>
   <header class="header">
+    <nav ref="navRef" class="header__nav">
+      <div
+        v-for="link in storyLinks"
+        :key="link.icon"
+        class="header__link-wrapper"
+      >
+        <NuxtLink
+          class="header__link link"
+          
+          :to="link.path"
+          :exact="false"
+        >
+          <div class="link__icon-wrapper">
+            <svg class="link__icon">
+              <use :href="link.icon" />
+            </svg>
+          </div>
+          <span class="link__text">{{ link.text }}</span>
+        </NuxtLink>
+      </div>
+    </nav>
     <div class="header__settings">
       <LightSwitch />
     </div>

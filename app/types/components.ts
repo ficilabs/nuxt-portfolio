@@ -1,4 +1,4 @@
-import type { StoryblokComponentType, SbBlokData } from '@storyblok/js';
+import type { StoryblokComponentType, SbBlokData, ISbStoryData } from '@storyblok/js';
 
 export interface MyButton extends StoryblokComponentType<'MyButton'> {
   text: string
@@ -77,4 +77,8 @@ export interface MyParagraph extends StoryblokComponentType<'MyParagraph'> {
 export interface MyPage extends StoryblokComponentType<'MyPage'> {
   title?: string
   body?: SbBlokData[]
+}
+
+export interface Config extends StoryblokComponentType<'Config'> {
+  pages: ISbStoryData[];
 }
