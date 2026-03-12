@@ -15,7 +15,7 @@ const storyLinks = computed(() => {
   return links.map(link => ({
     text: link.text,
     icon: `/sprite.svg#${link.slug}`,
-    path: getPath(link.slug)
+    path: getPath(link.slug)  // now returns '/' or '/about' etc.
   }))
 });
 
