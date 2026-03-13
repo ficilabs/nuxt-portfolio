@@ -75,7 +75,7 @@ onMounted(() => {
     <!-- TEXT -->
     <div ref="paragraphRef" class="paragraph__text">
 
-      
+      <AiChatBox />
 
     </div>
 
