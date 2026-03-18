@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    link: string
+    link?: string
     external?: boolean
   }>(),
   {
@@ -12,7 +12,10 @@ const props = withDefaults(
   }
 )
 
+const hasLink = computed(() => !!props.link)
+
 const isExternal = computed(() => {
+  if (!hasLink.value) return false
   if (props.external) return true
   return props.link.startsWith('http')
 })
@@ -21,7 +24,7 @@ const isExternal = computed(() => {
 <template>
   <!-- External -->
   <a
-    v-if="isExternal"
+    v-if="hasLink && isExternal"
     :href="link"
     class="link"
     target="_blank"
@@ -34,7 +37,7 @@ const isExternal = computed(() => {
 
   <!-- Internal -->
   <NuxtLink
-    v-else
+    v-else-if="hasLink && !isExternal"
     :to="link"
     class="link"
   >
@@ -42,4 +45,14 @@ const isExternal = computed(() => {
       <slot />
     </TextWithArrow>
   </NuxtLink>
+
+  <!-- Disabled / No link -->
+  <span
+    v-else
+    class="link link--disabled"
+  >
+    <TextWithArrow>
+      <slot />
+    </TextWithArrow>
+  </span>
 </template>
