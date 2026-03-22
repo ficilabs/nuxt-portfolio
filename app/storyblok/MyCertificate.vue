@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
     font-family: var(--font-family-secondary);
     font-size: var(--font-xs);
     font-weight: 700;
-    color: var(--primary);
+    color: #232946;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
