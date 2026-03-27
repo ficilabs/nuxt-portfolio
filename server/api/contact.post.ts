@@ -1,15 +1,24 @@
 // server/api/contact.post.ts
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export default defineEventHandler(async (event) => {
+  // Validate that RESEND_API_KEY is set
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.error('[Contact] RESEND_API_KEY is not set in environment variables')
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Server configuration error. Please try again later.',
+    })
+  }
+
+  const resend = new Resend(apiKey)
+
   const body = await readBody(event)
+  const { name, email, message } = body ?? {}
 
-  const { name, email, message } = body
-
-  // Basic server-side validation
-  if (!name || !email || !message) {
+  // ─── Server-side validation ────────────────────────────────────────────────
+  if (!name?.trim() || !email?.trim() || !message?.trim()) {
     throw createError({ statusCode: 400, statusMessage: 'All fields are required.' })
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -19,15 +28,29 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Message is too short.' })
   }
 
+  // ─── Send email ───────────────────────────────────────────────────────────
+  //
+  //  ✏️  REQUIRED: fill in your values below before deploying
+  //
+  //  FROM:
+  //    - Free Resend plan:  use "onboarding@resend.dev" (no domain needed)
+  //    - Custom domain:     e.g. "Portfolio <noreply@yourdomain.com>"
+  //                         (domain must be verified in Resend dashboard)
+  //
+  //  TO:
+  //    - Free Resend plan:  must be the email address you signed up to Resend with
+  //    - Custom domain:     any address you want
+  //
+  const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev'
+  const TO_EMAIL   = process.env.RESEND_TO_EMAIL   ?? 'vickycotot977@gmail.com'   // ✏️ change this
+
   const { data, error } = await resend.emails.send({
-    // ✏️  Replace with your verified Resend sender domain
-    from: 'Portfolio Contact <noreply@yourdomain.com>',
-    // ✏️  Replace with the address you want to receive messages at
-    to: ['you@yourdomain.com'],
+    from: FROM_EMAIL,
+    to: [TO_EMAIL],
     replyTo: email,
-    subject: `New message from ${name}`,
+    subject: `New portfoliomessage from ${name}`,
     html: `
-      <div style="font-family: 'Jost', sans-serif; max-width: 560px; margin: 0 auto; padding: 32px; background: #fffffe; border: 1px solid #121629; border-radius: 10px;">
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px; background: #fffffe; border: 1px solid #121629; border-radius: 10px;">
         <h2 style="margin: 0 0 24px; font-size: 24px; color: #232946;">
           New contact message<span style="color: #8ce2cb;">.</span>
         </h2>
@@ -51,7 +74,10 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     console.error('[Resend error]', error)
-    throw createError({ statusCode: 500, message: 'Failed to send email. Please try again.' })
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Failed to send email. Please try again.',
+    })
   }
 
   return { success: true, id: data?.id }
