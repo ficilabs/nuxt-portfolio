@@ -26,9 +26,9 @@ onBeforeUnmount(() => {
 <template>
   <div v-editable="blok" class="cert-wrapper">
     <article ref="cardRef" class="cert-card">
-
-      <!-- Icon + text column -->
       <div class="cert-card__body">
+
+        <!-- Icon -->
         <div class="cert-card__icon">
           <MyImage
             v-if="image"
@@ -42,16 +42,23 @@ onBeforeUnmount(() => {
           </svg>
         </div>
 
+        <!-- Text -->
         <div class="cert-card__content">
-          <h3 class="cert-card__title">
-            {{ blok.title }}<span class="dot">.</span>
-          </h3>
-          <MyLink v-if="blok.link" :link="blok.link" external class="cert-card__link">
-            View
-          </MyLink>
+          <p class="cert-card__title">
+            <span class="cert-card__title-text">{{ blok.title }}</span><span class="dot">.</span>
+          </p>
+          <a
+            v-if="blok.link"
+            :href="blok.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cert-card__link"
+          >
+            <TextWithArrow>View</TextWithArrow>
+          </a>
         </div>
-      </div>
 
+      </div>
     </article>
   </div>
 </template>
@@ -59,24 +66,28 @@ onBeforeUnmount(() => {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 
+/* Shadow backing */
 .cert-wrapper {
   position: relative;
   border-radius: var(--border-radius);
-  background-color: var(--primary);
+  background-color: var(--primary-dark);
   transition: background-color 0.15s linear;
   width: 100%;
+  min-width: 0;
 }
 
 .dark-scheme .cert-wrapper {
   background-color: var(--stroke);
 }
 
+/* Card surface — white in light, dark navy in dark */
 .cert-card {
   position: relative;
   width: 100%;
+  min-width: 0;
   border: var(--border);
   border-radius: var(--border-radius);
-  background-color: var(--background);
+  background-color: $secondary-light;
   overflow: hidden;
   will-change: transform;
   transform: translate3d(-10px, -10px, 0);
@@ -85,15 +96,10 @@ onBeforeUnmount(() => {
     background-color 0.15s linear;
 
   @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: translate3d(-4px, -4px, 0);
-    }
-    &:active {
-      transform: translate3d(0, 0, 0);
-    }
+    &:hover { transform: translate3d(-4px, -4px, 0); }
+    &:active { transform: translate3d(0, 0, 0); }
   }
 
-  /* Body: icon left, text column right */
   &__body {
     display: flex;
     align-items: center;
@@ -101,7 +107,7 @@ onBeforeUnmount(() => {
     padding: var(--space-s);
   }
 
-  /* Icon — fixed square */
+  /* Icon */
   &__icon {
     width: 40px;
     height: 40px;
@@ -130,33 +136,64 @@ onBeforeUnmount(() => {
   &__fallback {
     width: 22px;
     height: 22px;
-    color: var(--primary);
+    color: $primary-dark;
     opacity: 0.4;
   }
 
-  /* Text column: title on top, link below */
+  /* Text column */
   &__content {
     display: flex;
     flex-direction: column;
     gap: var(--space-3xs);
     flex: 1;
-    min-width: 0;
+    min-width: 0; /* critical for ellipsis in flex child */
   }
 
+  /* Title: truncated span + dot always visible */
   &__title {
+    display: flex;
+    align-items: baseline;
     font-family: var(--font-family-secondary);
     font-size: var(--font-sm);
     font-weight: 700;
-    color: var(--primary);
+    color: $primary-dark;
     line-height: 1.3;
+    min-width: 0;
+  }
+
+  &__title-text {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   &__link {
-    font-size: var(--font-xs);
+    display: inline-flex;
     width: fit-content;
+    text-decoration: none;
+  }
+}
+
+/* Dark mode overrides */
+.dark-scheme {
+  .cert-card {
+    background-color: $primary-dark;
+    border-color: $stroke;
+  }
+
+  .cert-card__title {
+    color: $primary-light;
+  }
+
+  .cert-card__icon {
+    background-color: $stroke;
+    border-color: $stroke;
+  }
+
+  .cert-card__fallback {
+    color: $primary-light;
   }
 }
 </style>
