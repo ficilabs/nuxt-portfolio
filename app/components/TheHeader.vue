@@ -8,6 +8,7 @@ const navRef = ref<Element>();
 const links = [
   { text: 'Home', slug: 'home' },
   { text: 'Projects', slug: 'projects' },
+  { text: 'Certificates', slug: 'certificate' },
   { text: 'About', slug: 'about' },
 ]
 

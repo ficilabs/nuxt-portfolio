@@ -115,7 +115,7 @@ defineExpose({
         width="271"
         height="271"
         class="hero-figure__img hero-figure__img--window"
-        src="https://a.storyblok.com/f/95455/271x271/da8634b97b/homie-objects-browser.png/m/filters:format(webp)"
+        src="https://a.storyblok.com/f/290600019888888/500x500/6c223c35cc/20260331_0133_image_generation_remix_01kn00adk3ep29rmbhxzs3s9f8-removebg-preview.png"
       />
     </div>
   </div>
