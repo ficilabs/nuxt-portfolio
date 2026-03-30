@@ -11,6 +11,7 @@ const cardRef = ref<Element | null>(null)
 const cardObserver = ref<IntersectionObserver>()
 
 const image = computed(() => props.blok.image?.[0] ?? null)
+const url = computed(() => props.blok.link?.url || null)
 
 onMounted(() => {
   if (cardRef.value) {
@@ -48,8 +49,8 @@ onBeforeUnmount(() => {
             <span class="cert-card__title-text">{{ blok.title }}</span><span class="dot">.</span>
           </p>
           <a
-            v-if="blok.link"
-            :href="blok.link"
+            v-if="url"
+            :href="url!"
             target="_blank"
             rel="noopener noreferrer"
             class="cert-card__link"

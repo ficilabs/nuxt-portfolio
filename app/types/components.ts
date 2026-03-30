@@ -86,7 +86,10 @@ export interface Config extends StoryblokComponentType<'Config'> {
 export interface MyCertificate extends StoryblokComponentType<'MyCertificate'> {
   _uid: string
   title: string
-  link?: string
+  link: {
+    url: string
+    linktype: 'url'
+  }
   image?: MyImage[]
 }
 
