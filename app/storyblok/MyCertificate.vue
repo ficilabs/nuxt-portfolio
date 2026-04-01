@@ -180,12 +180,12 @@ onBeforeUnmount(() => {
 /* Dark mode overrides */
 .dark-scheme {
   .cert-card {
-    background-color: $primary-dark;
+    background-color: $secondary-dark;
     border-color: $stroke;
   }
 
   .cert-card__title {
-    color: $primary-light;
+    color: $primary-dark;
   }
 
   .cert-card__icon {
