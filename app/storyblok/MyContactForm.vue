@@ -33,8 +33,8 @@ const form = ref<ContactForm>({
 //  ✏️  Replace hrefs with your actual profile URLs
 
 const socials = [
-  { id: 'linkedin',  label: 'LinkedIn',  href: 'https://linkedin.com' },
-  { id: 'github',    label: 'GitHub',    href: 'https://github.com' },
+  { id: 'linkedin',  label: 'LinkedIn',  href: 'https://linkedin.com/mohrofiqi' },
+  { id: 'github',    label: 'GitHub',    href: 'https://github.com/ficilabs' },
   { id: 'instagram', label: 'Instagram', href: 'https://instagram.com' },
 ]
 
@@ -156,7 +156,7 @@ function iconPath(icon: string) {
 
         <p class="contact__desc">
           I'm always open to interesting projects, collaborations, or just a good
-          conversation about frontend and design. Drop me a message — I'll get
+          conversation about tech trends. Drop me a message — I'll get
           back to you within 24 hours.
         </p>
 
