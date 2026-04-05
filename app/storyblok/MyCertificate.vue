@@ -50,12 +50,15 @@ onBeforeUnmount(() => {
           </p>
           <a
             v-if="url"
-            :href="url!"
+            :href="url"
             target="_blank"
             rel="noopener noreferrer"
             class="cert-card__link"
           >
-            <TextWithArrow>View</TextWithArrow>
+            View credential
+            <svg class="cert-card__link-arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14.29 5.71a1 1 0 00-1.41 1.41L18.17 11H3a1 1 0 000 2h15.18l-3.88 3.88a1 1 0 001.41 1.41l5.59-5.59a1 1 0 000-1.41l-5.59-5.59z"/>
+            </svg>
           </a>
         </div>
 
@@ -71,14 +74,14 @@ onBeforeUnmount(() => {
 .cert-wrapper {
   position: relative;
   border-radius: var(--border-radius);
-  background-color: var(--primary-dark);
+  background-color: $primary-dark;
   transition: background-color 0.15s linear;
   width: 100%;
   min-width: 0;
 }
 
 .dark-scheme .cert-wrapper {
-  background-color: var(--stroke);
+  background-color: $stroke;
 }
 
 /* Card surface — white in light, dark navy in dark */
@@ -172,16 +175,57 @@ onBeforeUnmount(() => {
 
   &__link {
     display: inline-flex;
+    align-items: center;
+    gap: 4px;
     width: fit-content;
-    text-decoration: none;
+    font-family: var(--font-family-secondary);
+    font-size: var(--font-xs);
+    font-weight: 700;
+    color: var(--tertiary-dark);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease-out;
+
+    &:hover {
+      text-decoration-color: var(--tertiary-dark);
+
+      .cert-card__link-arrow {
+        animation: cert-arrow 0.75s linear forwards;
+      }
+    }
   }
+
+  &__link-arrow {
+    width: 14px;
+    height: 14px;
+    fill: var(--tertiary-dark);
+    flex-shrink: 0;
+  }
+}
+
+@keyframes cert-arrow {
+  0%   { transform: translate3d(0, 0, 0); }
+  16%  { transform: translate3d(4px, 0, 0); }
+  28%  { transform: translate3d(1px, 0, 0); }
+  44%  { transform: translate3d(3px, 0, 0); }
+  59%  { transform: translate3d(2px, 0, 0); }
+  73%  { transform: translate3d(2.5px, 0, 0); }
+  88%  { transform: translate3d(2px, 0, 0); }
+  100% { transform: translate3d(2.5px, 0, 0); }
 }
 
 /* Dark mode overrides */
 .dark-scheme {
+  .cert-wrapper {
+    background-color: $stroke;
+  }
+
   .cert-card {
-    background-color: $secondary-dark;
-    border-color: $stroke;
+    // Lighter than $primary-dark (#232946) background so card is visible
+    background-color: #ccc5b9;
+    border-color: rgba($primary-light, 0.15);
   }
 
   .cert-card__title {
@@ -189,8 +233,8 @@ onBeforeUnmount(() => {
   }
 
   .cert-card__icon {
-    background-color: $stroke;
-    border-color: $stroke;
+    background-color: rgba($primary-light, 0.08);
+    border-color: rgba($primary-light, 0.15);
   }
 
   .cert-card__fallback {
