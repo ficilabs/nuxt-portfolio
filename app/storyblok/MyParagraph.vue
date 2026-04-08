@@ -10,28 +10,10 @@ if (process.client) {
 
 const props = defineProps<{ blok: MyParagraph }>()
 
-/*
-|--------------------------------------------------------------------------
-| Refs
-|--------------------------------------------------------------------------
-*/
-
 const figureRef = ref<Element | null>(null)
 const paragraphRef = ref<Element | null>(null)
 
-/*
-|--------------------------------------------------------------------------
-| Storyblok helpers
-|--------------------------------------------------------------------------
-*/
-
 const figure = computed(() => props.blok.figure?.[0] || null)
-
-/*
-|--------------------------------------------------------------------------
-| Animation
-|--------------------------------------------------------------------------
-*/
 
 function createScrollTriggerTl(target: Element) {
   gsap.set(target, { autoAlpha: 0 })
@@ -72,11 +54,9 @@ onMounted(() => {
     ]"
   >
 
-    <!-- TEXT -->
+    <!-- TEXT / CHAT BOX -->
     <div ref="paragraphRef" class="paragraph__text">
-
       <AiChatBox />
-
     </div>
 
     <!-- FIGURE -->
@@ -184,18 +164,27 @@ onMounted(() => {
   }
 
   &__figure {
+    /*
+      On mobile: normal flow, centered horizontally.
+      On desktop: flex column so the child (MyProfile) is both
+      horizontally AND vertically centered inside this half-width column.
+      align-self: stretch makes it take full height of the row,
+      then justify-content: center + align-items: center put the
+      profile dead-center inside that space.
+    */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 70%;
     width: 70%;
-    transform-box: fill-box;
     padding: 0 5vw;
 
     @media screen and (min-width: $max-width) {
       flex-basis: 50%;
+      align-self: stretch;  /* fill the full row height */
+      width: auto;
       padding-right: 0;
-      padding-left: 20%;
+      padding-left: 10%;
     }
   }
 }

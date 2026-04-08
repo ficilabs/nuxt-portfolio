@@ -82,3 +82,17 @@ export interface MyPage extends StoryblokComponentType<'MyPage'> {
 export interface Config extends StoryblokComponentType<'Config'> {
   pages: ISbStoryData[];
 }
+
+export interface MyCertificate extends StoryblokComponentType<'MyCertificate'> {
+  _uid: string
+  title: string
+  link: {
+    url: string
+    linktype: 'url'
+  }
+  image?: MyImage[]
+}
+
+export interface MyCertificateList extends StoryblokComponentType<'MyCertificateList'> {
+  certificates: MyCertificate[]
+}

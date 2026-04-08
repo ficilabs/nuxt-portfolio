@@ -85,8 +85,11 @@ function iconPath(icon: string) {
 <template>
   <div v-editable="blok" class="profile">
 
-    <!-- Profile Image -->
-    <div class="profile__wrapper profile__wrapper--round">
+    <!-- Profile Image
+         .profile__img-group  = backing container (like .button-container)
+         .profile__img        = floated image (like .button)
+    -->
+    <div class="profile__img-group">
       <MyImage
         v-if="profileImage"
         ref="profileImgRef"
@@ -96,10 +99,12 @@ function iconPath(icon: string) {
       />
     </div>
 
-    <!-- Social Links -->
-    <div class="profile__wrapper">
+    <!-- Social Links
+         .profile__links-group  = backing container
+         .profile__links        = floated bar
+    -->
+    <div class="profile__links-group">
       <ul ref="linksRef" class="profile__links">
-
         <li
           v-for="link in links"
           :key="link.id"
@@ -117,7 +122,6 @@ function iconPath(icon: string) {
             </svg>
           </a>
         </li>
-
       </ul>
     </div>
 
@@ -127,66 +131,118 @@ function iconPath(icon: string) {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 
+/* ─── Root ────────────────────────────────────────────────────────────────── */
+
 .profile {
-  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-m);
 
-  &__wrapper {
-    width: 100%;
-    height: 100%;
-    background-color: var(--shadow);
-    border-radius: var(--border-radius);
-
-    &--round {
-      border-radius: 50%;
-    }
-  }
-
-  &__img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 10px solid var(--secondary);
-    box-shadow: 0 0 0 2px var(--stroke);
-
-    @media screen and (min-width: $max-width) {
-      width: 250px;
-      height: 250px;
-    }
-  }
-
-  &__links {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    height: 100%;
-    margin-top: 25px;
-    background-color: var(--tertiary);
-    border-radius: var(--border-radius);
-    border: var(--border);
-  }
-
-  &__a {
-    display: flex;
-    align-items: center;
+  @media screen and (min-width: $max-width) {
     justify-content: center;
   }
+}
 
-  &__link {
-    margin: 10px 0;
+/* ─── Image — mirrors .button-container / .button pattern ─────────────────── */
+
+.profile__img-group {
+  /*
+    The dark backing "floor" — same role as .button-container.
+    Its background-color peeks out from behind the translated image
+    to create the offset shadow effect cleanly on a circle.
+  */
+  position: relative;
+  width: max-content;
+  height: max-content;
+  border-radius: 50%;
+  background-color: var(--primary);
+  transition: background-color 0.15s linear;
+}
+
+.profile__img {
+  /*
+    Floats above the backing with the same offset as .button:
+    translate3d(-10px, -10px, 0).
+    border + outline replace the old conflicting box-shadow ring.
+  */
+  display: block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 10px solid var(--secondary);
+  outline: 2px solid var(--stroke);
+  outline-offset: -1px;
+  transform: translate3d(-10px, -10px, 0);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.15s linear;
+  will-change: transform;
+
+  @media screen and (min-width: $max-width) {
+    width: 250px;
+    height: 250px;
   }
+}
 
-  &__svg {
-    width: 32px;
-    height: 32px;
-    color: var(--secondary);
-    stroke: var(--stroke);
-    stroke-width: 10;
-    transition: color 0.15s ease-in-out;
+/* ─── Social links — same backing / float pattern ─────────────────────────── */
 
-    &:hover {
-      color: var(--primary-light);
-    }
+.profile__links-group {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  border-radius: var(--border-radius);
+  background-color: var(--primary);
+  transition: background-color 0.15s linear;
+
+  @media screen and (min-width: $max-width) {
+    max-width: 250px;
+  }
+}
+
+.profile__links {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  background-color: var(--tertiary);
+  border-radius: var(--border-radius);
+  border: var(--border);
+  transform: translate3d(-10px, -10px, 0);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.15s linear;
+}
+
+.profile__a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile__link {
+  margin: 10px 0;
+}
+
+.profile__svg {
+  width: 32px;
+  height: 32px;
+  color: var(--secondary);
+  stroke: var(--stroke);
+  stroke-width: 10;
+  transition: color 0.15s ease-in-out;
+
+  &:hover {
+    color: var(--primary-light);
+  }
+}
+
+/* ─── Dark scheme ─────────────────────────────────────────────────────────── */
+
+.dark-scheme {
+  .profile__img-group,
+  .profile__links-group {
+    background-color: var(--stroke);
   }
 }
 </style>

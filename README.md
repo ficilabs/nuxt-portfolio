@@ -1,75 +1,85 @@
-# Nuxt Minimal Starter
+# Portfolio — Nuxt 4 + Storyblok
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A JAMstack portfolio site built with Nuxt 4, Storyblok CMS, and GSAP.
 
-## Setup
+## Tech Stack
 
-Make sure to install dependencies:
+- **Framework** — [Nuxt 4](https://nuxt.com)
+- **CMS** — [Storyblok](https://www.storyblok.com) (headless, EU region)
+- **Animations** — [GSAP](https://gsap.com)
+- **Styling** — SCSS with custom design system
+- **Fonts** — Google Fonts (Open Sans, Jost) via `@nuxtjs/google-fonts`
+- **Images** — `@nuxt/image` with Storyblok image transformations
+
+## Prerequisites
+
+- Node.js 18+
+- A [Storyblok](https://www.storyblok.com) account with a space configured
+
+## Getting Started
 
 ```bash
-# npm
+# Install dependencies
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+# Copy environment variables
+cp .env.example .env
 ```
 
-## Development Server
+Set your Storyblok access token in `.env`:
 
-Start the development server on `http://localhost:3000`:
+```env
+STORYBLOK_TOKEN=your_draft_token_here
+```
 
 ```bash
-# npm
+# Start dev server
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+## Environment Variables
 
-Build the application for production:
+| Variable | Description |
+|---|---|
+| `STORYBLOK_TOKEN` | Storyblok space API token (draft for dev, public for prod) |
+
+## Scripts
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npm run dev       # Development server
+npm run build     # Production build
+npm run preview   # Preview production build
 ```
 
-Locally preview production build:
+## Project Structure
 
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+```
+app/
+├── assets/styles/   # SCSS design system (variables, colors, spacing, typography)
+├── components/      # Global Vue components
+├── layouts/         # Nuxt layouts
+├── pages/           # File-based routing
+├── storyblok/       # Storyblok component mappings
+├── types/           # TypeScript interfaces
+└── utils/           # Shared utilities (GSAP animations, image helpers)
+public/
+└── sprite.svg       # SVG icon sprite
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Storyblok Setup
+
+Content is managed entirely through Storyblok. The following components must be defined in your Storyblok space:
+
+- `Page` — page wrapper with title and body
+- `MyHero` — hero section
+- `MyRichText` — rich text block
+- `MyButtonList` / `MyButton` — CTA buttons
+- `MyProjectList` / `MyProject` — project grid with filter
+- `MyProfile` — profile card with social links
+- `MyParagraph` — text + figure section
+- `MyImage` — responsive image with lazy loading
+- `Config` — global navigation config
+
+## License
+
+MIT

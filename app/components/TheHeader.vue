@@ -2,12 +2,14 @@
 import { computed, onMounted, ref } from 'vue';
 import { gsap } from 'gsap';
 import { getPath } from '~/utils/get-path';
+import { text } from 'node:stream/consumers';
 
 const navRef = ref<Element>();
 
 const links = [
   { text: 'Home', slug: 'home' },
   { text: 'Projects', slug: 'projects' },
+  { text: 'Certificates', slug: 'certificate' },
   { text: 'About', slug: 'about' },
 ]
 
